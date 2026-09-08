@@ -5,6 +5,6 @@
 window.SEATING_CONFIG = {
   sheetApiUrl: "https://script.google.com/macros/s/AKfycbyrKBjZA6RL22pZC8MMAsngCQ0MUQ0twMPWVFUQ-wE2WK_9hQOsAW4y_XXDoPHtgGntAg/exec",
   refreshSeconds: 8,
-  courseName: "83동 305호 자리배치도",
-  sessionLabel: "수업 운영 화면"
+  courseName: "83동 305호",
+  sessionLabel: "좌석 배치도"
 };
