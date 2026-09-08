@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="color-scheme" content="dark" />
+    <title>대형강의실 자리배치도</title>
+    <style>
+      :root { --ink:#eef5ff; --muted:#aebfd5; --line:rgba(202,224,255,.18); --card:#132747; --empty:#52677f; --active:#15c3a6; --late:#f2ba4a; --absent:#f1706a; }
+      * { box-sizing:border-box; }
+      body { margin:0; min-width:900px; background:radial-gradient(circle at 50% -20%,#24497c 0,#0b1930 43%,#071020 100%); color:var(--ink); font-family:Inter,"Noto Sans KR",system-ui,sans-serif; }
+      .app { min-height:100vh; padding:2.4vh 3vw 2.8vh; display:flex; flex-direction:column; gap:1.7vh; }
+      header { display:flex; align-items:end; justify-content:space-between; gap:2rem; border-bottom:1px solid var(--line); padding-bottom:1.45vh; }
+      h1 { margin:0; font-size:clamp(1.55rem,2.3vw,2.45rem); letter-spacing:-.04em; }
+      .sub { color:var(--muted); margin:.4rem 0 0; font-size:clamp(.85rem,1.2vw,1.1rem); }
+      .meta { display:flex; align-items:center; gap:.65rem; color:var(--muted); font-size:clamp(.72rem,1.05vw,.95rem); white-space:nowrap; }
+      .dot { width:.62rem; height:.62rem; border-radius:50%; background:var(--active); box-shadow:0 0 14px var(--active); }
+      .stage { flex:1; border-radius:1.4rem; padding:1.65vh 1.5vw 1.35vh; background:linear-gradient(140deg,rgba(255,255,255,.055),rgba(255,255,255,.01)); border:1px solid var(--line); overflow:hidden; display:flex; flex-direction:column; }
+      .screen { text-align:center; font-weight:800; color:#c9e4ff; letter-spacing:.22em; font-size:clamp(.76rem,1.3vw,1.05rem); padding:.45rem 1rem; margin:0 auto 1.45vh; min-width:24%; border-bottom:4px solid #74b8ea; }
+      .auditorium { flex:1; display:flex; flex-direction:column; justify-content:center; gap:1.15vh; max-width:1740px; width:100%; margin:auto; }
+      .zone-row { display:grid; gap:1.2vw; justify-content:center; }
+      .zone-row.back { grid-template-columns:repeat(3,minmax(240px,1fr)); padding:0 8%; }
+      .zone-row.front { grid-template-columns:repeat(4,minmax(190px,1fr)); }
+      .zone { position:relative; overflow:hidden; min-width:0; border:1px solid rgba(197,222,252,.21); border-radius:1rem; padding:.72rem .75rem .72rem; background:linear-gradient(145deg,rgba(43,75,122,.64),rgba(11,29,55,.9)); box-shadow:inset 0 1px rgba(255,255,255,.05),0 16px 30px rgba(0,0,0,.12); }
+      .zone::before { content:""; position:absolute; inset:0; opacity:.22; background:repeating-linear-gradient(-13deg,transparent 0 25px,rgba(205,229,255,.19) 26px 27px); pointer-events:none; }
+      .zone-head { position:relative; display:flex; align-items:center; gap:.45rem; margin:0 0 .58rem; color:#d9ebff; font-size:clamp(.76rem,1vw,.96rem); font-weight:700; }
+      .zone-badge { display:grid; place-items:center; flex:0 0 auto; width:1.64rem; height:1.64rem; border-radius:50%; background:#159dc6; color:#fff; font-size:1rem; box-shadow:0 0 0 3px rgba(21,157,198,.16); }
+      .zone-note { color:var(--muted); font-weight:500; }
+      .seat-grid { position:relative; display:grid; grid-template-columns:repeat(5,minmax(0,1fr)); gap:.34rem; }
+      .seat { min-height:clamp(2.7rem,5.05vh,4.2rem); border:1px solid rgba(192,219,250,.27); border-radius:.48rem .48rem .24rem .24rem; padding:.19rem .24rem; display:flex; flex-direction:column; justify-content:space-between; background:#1e416d; box-shadow:0 2px 0 rgba(255,255,255,.1) inset; }
+      .seat[data-status="빈자리"] { background:rgba(64,86,113,.72); border-color:rgba(182,201,224,.22); }
+      .seat[data-status="이동"] { background:rgba(143,101,35,.82); border-color:rgba(253,213,133,.55); }
+      .seat[data-status="결석"] { background:rgba(111,57,70,.82); border-color:rgba(250,161,162,.45); }
+      .seat-id { color:#bbddff; font-weight:700; font-size:clamp(.55rem,.72vw,.76rem); letter-spacing:.02em; }
+      .seat-name { overflow:hidden; text-overflow:ellipsis; white-space:nowrap; color:#fff; font-size:clamp(.76rem,1.05vw,1.05rem); font-weight:800; letter-spacing:-.04em; }
+      .seat[data-status="빈자리"] .seat-name { color:#c1ccd9; font-weight:600; }
+      footer { display:flex; align-items:center; justify-content:space-between; color:var(--muted); gap:1rem; font-size:clamp(.72rem,1vw,.9rem); }
+      .legend { display:flex; gap:1rem; flex-wrap:wrap; }
+      .legend span { display:flex; align-items:center; gap:.35rem; }
+      .swatch { width:.6rem; height:.6rem; border-radius:50%; background:#1e416d; } .swatch.empty{background:var(--empty)} .swatch.move{background:var(--late)} .swatch.absent{background:var(--absent)}
+      .source { text-align:right; }
+      @media (max-width:1000px) { body{min-width:720px}.zone-row.back{padding:0 4%}.seat-grid{gap:.25rem}.zone{padding:.55rem}.seat{padding:.15rem}.app{padding-left:2vw;padding-right:2vw;} }
+    </style>
+  </head>
+  <body>
+    <main class="app">
+      <header>
+        <div><h1 id="courseName">대형강의실 자리배치도</h1><p class="sub" id="sessionLabel">수업 운영 화면</p></div>
+        <div class="meta"><span class="dot"></span><span id="updatedAt">명단을 불러오는 중…</span></div>
+      </header>
+      <section class="stage" aria-label="대형강의실 좌석 배치">
+        <div class="screen">강단 · 화면</div>
+        <div class="auditorium" id="auditorium"></div>
+      </section>
+      <footer>
+        <div class="legend"><span><i class="swatch"></i>배정</span><span><i class="swatch empty"></i>빈자리</span><span><i class="swatch move"></i>이동</span><span><i class="swatch absent"></i>결석</span></div>
+        <div class="source" id="sourceInfo">스프레드시트와 연결하면 이름 변경이 자동 반영됩니다.</div>
+      </footer>
+    </main>
+    <script src="config.js"></script>
+    <script src="app.js"></script>
+  </body>
+</html>
