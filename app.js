@@ -73,7 +73,7 @@
     sourceInfo.textContent = label;
   }
 
-  document.querySelector("#courseName").textContent = config.courseName || "대형강의실 자리배치도";
+  document.querySelector("#courseName").textContent = config.courseName || "83동 305호 자리배치도";
   document.querySelector("#sessionLabel").textContent = config.sessionLabel || "수업 운영 화면";
   load();
   window.setInterval(load, Math.max(5, Number(config.refreshSeconds) || 8) * 1000);
